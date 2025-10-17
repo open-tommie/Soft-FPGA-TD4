@@ -4,9 +4,10 @@
 
 - Verilogで実装したシンプルな4bit CPU TD4をverilatorでC++ソースへ変換し、`Raspberry Pi Pico2` 上で動作するようにしました。
 
+![pico2-01](./images/pico2-01.jpg)
 
 ---
--以下はfork元からの引用です。
+## 以下はfork元からの引用です。
 
 # simpleTD4 
 Verilogで実装したシンプルな4bit CPU TD4の実装です。 

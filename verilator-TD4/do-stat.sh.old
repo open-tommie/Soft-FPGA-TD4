@@ -1,0 +1,30 @@
+#!/bin/bash
+# verilogソースから統計情報(FF数など)を得る
+
+if [[ $NAME -ne "wsl400" ]]; then
+  echo "This script is intended to run in WSL environment."
+  exit 1
+fi
+
+yosys -p "
+  read_verilog TD4.v
+  synth_xilinx -top TD4 -flatten
+  #techmap
+  #stat
+" | \
+sed -n '/Printing statistics/,$p'| \
+gawk -n '
+/xxx^[[:space:]]+LUT/
+{
+    count["LUT"]+=$2
+    print "LUT:0=",$0,"2=",$2
+}
+/xxx^ +(DFF|FDCE|FDRE|FDSE)/
+{
+    count["FF"]+=$2
+}
+END {
+    printf( "FF  %3d\n", count["FF"]);
+    printf( "LUT %3d\n", count["LUT"]);
+}
+'
