@@ -3,11 +3,37 @@
 - 2025/10/17 __まだ編集中です__
 
 - Verilogで実装したシンプルな4bit CPU TD4をverilatorでC++ソースへ変換し、`Raspberry Pi Pico2` 上で動作するようにしました。
+- __FPGAは不要__ です。pico2のみで動きます。
+- 開発環境
+  - VSCode拡張: Raspberry Pi が公開した拡張機能 (Raspberry Pi Pico)
+    - [Raspberry Pi Pico Visual Studio Code extension](https:/github.com/raspberrypi/pico-vscode)
+      - この拡張でSDKがインストールされる。
+      - [公式 Raspberry Pi Pico SDK](https://github.com/raspberrypi/)
 - verilogソース: [TD4.v](./verilator-TD4/TD4.v)
 - verilator実行スクリプト: [do-verilator.sh](./verilator-TD4/do-verilator.sh)
+- [verilatorマニュアル](https://veripool.org/guide/latest/)
+  - verilatorで変換したC++ソースはLinux向けになっています。
+  - そのままではpico2 SDK C++ではコンパイルエラーがでます。
+  - エラーがでないように修正し、pico2で実行できました。
 - [main.cpp](./verilator-TD4/main.cpp)
+  - top: verilatorが出力したTD4.vのモデルインスタンス
+    - verilogシミュレーション用のインスタンス
+  - 以下を繰り返す
+    - DIPスイッチをINレジスタへ設定する
+      - 4bit DIPスイッチの状態をpico2のGPIOから読む
+      - 読んだ値を top->in_port(INレジスタ)へ設定する
+    - top->eval(): 評価：TD4.vの状態を更新する
+    - LEDへOUTレジスタを設定する
+      - top->out_port(OUTレジスタ)の値をpico2のGIPOでLEDへ出力する 
+    - top->clock = !top->clock: クロックを反転する
+    - sleep: 時間まち
+  - top->eval()の処理時間は6μ秒ぐらいなので、最大クロック周波数は50kHzぐらいの見込み。
+    - デバッグ文を出力すると遅くなる
+    - GPIOで遅くなる。
 
 ![pico2-01](./images/pico2-01.jpg)
+
+
 
 ---
 ## 以下はfork元からの引用です。
