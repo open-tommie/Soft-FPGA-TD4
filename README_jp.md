@@ -8,7 +8,7 @@
   - VSCode拡張: Raspberry Pi が公開した拡張機能 (Raspberry Pi Pico)
     - [Raspberry Pi Pico Visual Studio Code extension](https://github.com/raspberrypi/pico-vscode)
       - この拡張でSDKがインストールされる。
-      - [公式 Raspberry Pi Pico SDK](https://github.com/raspberrypi/)
+      - [公式 Raspberry Pi Pico SDK](https://github.com/raspberrypi/pico-sdk)
 - verilogソース: [TD4.v](./verilator-TD4/TD4.v)
 - verilator実行スクリプト: [do-verilator.sh](./verilator-TD4/do-verilator.sh)
 - [verilatorマニュアル](https://veripool.org/guide/latest/)
