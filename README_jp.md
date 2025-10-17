@@ -6,7 +6,7 @@
 - __FPGAは不要__ です。pico2のみで動きます。
 - 開発環境
   - VSCode拡張: Raspberry Pi が公開した拡張機能 (Raspberry Pi Pico)
-    - [Raspberry Pi Pico Visual Studio Code extension](https:/github.com/raspberrypi/pico-vscode)
+    - [Raspberry Pi Pico Visual Studio Code extension](https://github.com/raspberrypi/pico-vscode)
       - この拡張でSDKがインストールされる。
       - [公式 Raspberry Pi Pico SDK](https://github.com/raspberrypi/)
 - verilogソース: [TD4.v](./verilator-TD4/TD4.v)
