@@ -1,3 +1,13 @@
+# Soft-FPGA-TD4
+
+- 2025/10/17 __まだ編集中です__
+
+- Verilogで実装したシンプルな4bit CPU TD4をverilatorでC++ソースへ変換し、`Raspberry Pi Pico2` 上で動作するようにしました。
+
+
+---
+-以下はfork元からの引用です。
+
 # simpleTD4 
 Verilogで実装したシンプルな4bit CPU TD4の実装です。 
 [Sipeed Tang Nano] (https://tangnano.sipeed.com/en/) でも動作します。
