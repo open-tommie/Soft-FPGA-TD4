@@ -1,4 +1,14 @@
+(Oct-17-2025 Now, Editing...)
+
+# Soft-FPGA-TD4 
+
+- [Japanese version README](./README_jp.md)
+
+
+---
+
 # simpleTD4 
+
 simpleTD4 is an implementation of 4bit CPU TD4 written with verilog.
 simpleTD4 runs on iverlog or [Sipeed Tang Nano](https://tangnano.sipeed.com/en/) .
 
