@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Serial COM Reader</title>
+</head>
+<body>
+    <button id="connect">Connect to Serial Port</button>
+    <textarea id="output" rows="10" cols="50" placeholder="Received data will appear here..."></textarea>
+
+    <script>
+        const connectButton = document.getElementById('connect');
+        const output = document.getElementById('output');
+
+        connectButton.addEventListener('click', async () => {
+            try {
+                // 利用可能なポートをリクエスト
+                const port = await navigator.serial.requestPort();
+                
+                // ポートを開く（ボーレート9600、8N1）
+                await port.open({ baudRate: 9600 });
+                
+                // 読み取り用リーダーを作成
+                const reader = port.readable.getReader();
+                
+                // データ読み取りループ
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    
+                    // バイトデータを文字列に変換（UTF-8例）
+                    const text = new TextDecoder().decode(value);
+                    output.value += text;
+                    output.scrollTop = output.scrollHeight; // 自動スクロール
+                }
+                
+                reader.releaseLock();
+            } catch (error) {
+                output.value += `Error: ${error.message}\n`;
+            }
+        });
+    </script>
+</body>
+</html>
