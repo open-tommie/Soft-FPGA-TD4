@@ -26,7 +26,7 @@
 - pico2のADCを使った`soft-FPGA`実験
   - FIRフィルター実験(リアルタイムDSP処理)
     - `Grok`に聞いてみた。verilogソースあり。
-      - [01-FIR-filter-verilog.pdf](./etc/01-FIR-filter-verilog.pdf)
+      - [01-FIR-filter-verilog.pdf](./01-FIR-filter-verilog.pdf)
     - pico2のADCで音声帯域の信号をアナログ入力
     - verilogでFIRフィルターを記述
       - まずはLPF(低周波フィルター）
@@ -44,7 +44,7 @@
 - verilogでオセロ作れるか？
   - 調査した範囲では作れそうだ。
   - `Grok`に聞いてみた。verilogソースあり（未検証）
-    - [02-othello-verilog.pdf](./etc/02-othello-verilog.pdf)
+    - [02-othello-verilog.pdf](./02-othello-verilog.pdf)
   - UI(盤面の表示、指し手の位置指定など)をpico SDK C++で書き、`soft FGPA`でverilogオセロ部分を実行する。
   - 実は、オセロマシンを作る妄想を昔からしていた。
     - 最初は`74シリーズTTL`で作る妄想をしていた。
