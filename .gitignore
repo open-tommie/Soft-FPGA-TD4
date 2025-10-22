@@ -13,7 +13,7 @@ CMakeCache.txt
 CMakeFiles/
 .cache
 #VSCode
-.vscode/
+#.vscode/
 # SO
 .DS_Store
 Thumbs.db
