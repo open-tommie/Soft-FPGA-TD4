@@ -2,6 +2,8 @@
 
 ![soft-fpga-logo](./images/soft_fpga_logo-70x50.png)
 
+- 2025/10/28 `0.1alpha` リリースしました。
+  - [soft-FPGA-TD4-0.1alpha](https://github.com/open-tommie/Soft-FPGA-TD4/releases)
 - 2025/10/25 __まだ編集中ですが__
   - 実行手順を書きました。
   - git cloneしてビルドできるはず。
