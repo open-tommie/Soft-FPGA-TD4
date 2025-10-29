@@ -2,7 +2,7 @@
 
 ![soft-fpga-logo](./images/soft_fpga_logo-70x50.png)
 
-- 2025/10/30 `Fritzing`ブレッドボード図を追加しまいた。
+- 2025/10/30 `Fritzing`ブレッドボード図を追加しました。
 
 [![Sketch](./images/soft-FPGA-TD4-Sketch-198x200.png)](./images/soft-FPGA-TD4-Sketch-1815x1832.png)
 
@@ -159,7 +159,7 @@
   ```
 
 - 結論
-  - verilatorを実行しても出力C++ソースを修正する必要はありません。
+  - verilatorの出力C++ソースを修正する必要はありません。
 
 ---
 
@@ -173,7 +173,7 @@
 
 ### simpleTD4
 
-- [TD4\_details\_jp.md](TD4_details_jp.md) でコードの解説をしています。
+- [TD4_details_jp.md](https://github.com/asfdrwe/simpleTD4/blob/master/TD4_details_jp.md) にコードの解説があります。
 
 ---
 
