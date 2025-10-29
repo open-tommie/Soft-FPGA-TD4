@@ -3,7 +3,9 @@
 ![soft-fpga-logo](./images/soft_fpga_logo-70x50.png)
 
 - 2025/10/30 `Fritzing`ブレッドボード図を追加しまいた。
+
 [![Sketch](./images/soft-FPGA-TD4-Sketch-198x200.png)](./images/soft-FPGA-TD4-Sketch-1815x1832.png)
+
 - 2025/10/28 `0.1alpha` リリースしました。
   - [soft-FPGA-TD4-0.1alpha](https://github.com/open-tommie/Soft-FPGA-TD4/releases)
 - 2025/10/25 __まだ編集中ですが__
@@ -90,6 +92,8 @@
 ## pico2接続
 
 （TBD)
+
+- ログ解説
 
 ---
 
