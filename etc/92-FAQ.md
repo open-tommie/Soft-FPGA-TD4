@@ -20,10 +20,10 @@
 - 実際は`CMakeLists.txt`に書かれています。
   - [CMakeLists.txt](./verilator-TD4/CMakeLists.txt)
 
-  ```text
-      # dir_obj/*.cppに -include stub_mutex.h を適用
-      set_source_files_properties(${VERILATOR_SOURCES} PROPERTIES COMPILE_FLAGS "-include stub_mutex.h")
-  ```
+    ```text
+        # dir_obj/*.cppに -include stub_mutex.h を適用
+        set_source_files_properties(${VERILATOR_SOURCES} PROPERTIES COMPILE_FLAGS "-include stub_mutex.h")
+    ```
 
 - 結論
   - verilatorの出力C++ソースを修正する必要はありません。
