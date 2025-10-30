@@ -2,14 +2,15 @@
 
 ![soft-fpga-logo](./images/soft_fpga_logo-70x50.png)
 
-- 2025/10/30 `Fritzing`ブレッドボード図を追加しました。
+- 2025/10/30 ブレッドボード図を追加しました。
+  - [Fritzing](https://fritzing.org/)で作成しました。
 
 [![Sketch](./images/soft-FPGA-TD4-Sketch-198x200.png)](./images/soft-FPGA-TD4-Sketch-1815x1832.png)
 
 - 2025/10/28 `0.1alpha` リリースしました。
   - [soft-FPGA-TD4-0.1alpha](https://github.com/open-tommie/Soft-FPGA-TD4/releases)
 - 2025/10/25 __まだ編集中ですが__
-  - 実行手順を書きました。
+  - ビルド手順を書きました。
   - git cloneしてビルドできるはず。
 
 - Verilogで実装したシンプルな4bit CPU TD4をverilatorでC++ソースへ変換し、`Raspberry Pi Pico2` 上で動作するようにしました。
@@ -33,12 +34,14 @@
 
 ---
 
-## `soft-FPGA`実行手順
+## `soft-FPGA`ビルド手順
 
-- WSL2: git cloneでファイル取得
-
+- git cloneでファイル取得
+  - WSL2 Ubuntu24で実行する場合はWindowsからわかりやすいディレクトリ上で実行すると良い。
+    - 例：WSL2 Ubuntu24の`/mnt/c/pico2`はWindowsの`C:\pico2\`
+  
   ```text
-  $ git clone https://github.com/open-tommie/Soft-FPGA-TD4.git
+  git clone https://github.com/open-tommie/Soft-FPGA-TD4.git
   ```
 
 - Windows11: ファイルエクスプローラでクローンしたSoft-FPGA-TD4フォルダーを開き、`VSVodeワークスペースファイル`をダブルクリック
@@ -69,8 +72,14 @@
 
 （TBD)
 
-- リブートするとLEDが点滅します
+- リブートすると4秒後にLEDが点滅します
 - TeraTermでログ出力を確認
+
+---
+
+## verilatorでverilogをC++変換
+
+(TBD)
 
 ---
 
@@ -83,12 +92,6 @@
   
 ---
 
-## verilatorでverilogをC++変換
-
-(TBD)
-
----
-
 ## pico2接続
 
 （TBD)
@@ -99,33 +102,39 @@
 
 ## 解説
 
-- [verilatorマニュアル](https://veripool.org/guide/latest/)
+- [verilator公式マニュアル(英文)](https://veripool.org/guide/latest/)
   - verilatorで変換したC++ソースはLinux向けになっています。
   - そのままではpico2 SDK C++ではコンパイルエラーがでます。
-  - エラーがでないように修正し、pico2で実行できました。
+  - エラーがでないようにして、pico2で実行できるようにしました。
 
-- verilogソース
+- TD4 verilogソース
   - [TD4.v](./verilator-TD4/TD4.v)
   - fork元のsimpleTD4を修正して使っています。
   - fork元の解説が充実しているので是非、参照して下さい。
     - [simpleTD4](https://github.com/asfdrwe/simpleTD4)
-      - Verilogで実装したシンプルな4bit CPU TD4の実装です。
-      - [Sipeed Tang Nano](https://tangnano.sipeed.com/en/) でも動作します。
-      - [TD4\_details\_jp.md](TD4_details_jp.md) でコードの解説をしています。
+      - Verilogで実装したシンプルな4bit CPU TD4の実装。
+      - [Sipeed Tang Nano](https://tangnano.sipeed.com/en/) で動作。
+      - [TD4_details_jp.md](https://github.com/asfdrwe/simpleTD4/blob/master/TD4_details_jp.md) にTD4.vの解説があります。
 
 - [main.cpp](./verilator-TD4/main.cpp)
-  - top: verilatorが出力したTD4.vのモデルインスタンス
+  - main.cppの処理概要は以下の通りです。
+    - pico2のGPIOを初期化
+    - DIP SWの値をTD4:IN_PORTレジスタへ設定
+    - TD4クロック実行
+    - TD4:OUT_PORTをLEDへ出力
+  - `top`はverilatorが出力するTD4.vのモデルインスタンス
     - verilogシミュレーション用のインスタンス
   - 以下を繰り返す
-    - DIPスイッチをINレジスタへ設定する
+    - DIPスイッチの値をIN_PORTレジスタへ設定する
       - 4bit DIPスイッチの状態をpico2のGPIOから読む
-      - 読んだ値を top->in_port(INレジスタ)へ設定する
-    - top->eval(): 評価：TD4.vの状態を更新する
-    - LEDへOUTレジスタを設定する
-      - top->out_port(OUTレジスタ)の値をpico2のGIPOでLEDへ出力する 
+      - GPIOの値をtop->in_port(IN_PORTレジスタ)へ設定する
+    - top->eval(): 評価：TD4の状態を更新する
+    - OUT_PORTレジスタの値をLEDへ出力する
+      - top->out_port(OUT_PORTレジスタ)の値をpico2のGIPOでLEDへ出力する
     - top->clock = !top->clock: クロックを反転する
     - sleep: 時間まち
-  - top->eval()の処理時間は6μ秒ぐらいなので、最大クロック周波数は50kHzぐらいの見込み。
+  - top->eval()の処理時間はデバッグ出力なしで6μ秒ぐらい
+    - 逆算すると、TD4の最大クロック周波数は50kHzぐらいの見込み。
     - デバッグ文を出力すると遅くなる
     - GPIOで遅くなる。
 
@@ -133,47 +142,16 @@
 
 ## FAQ
 
-### Q: verilator出力のC++ソースを毎回修正する必要あるか？
+### Q1-verilator出力のC++ソースを修正する必要あるか？
 
 - A: __ありません。__
-- verilatorはLinux向けビルドを想定しているので、出力C++ソースではpthread mutexを使っています。
-- pico SDKはpthread mutexをサポートしていないので、そのままではコンパイルエラーになります。(verilatorのフラグオプションで thread 1に指定してもmutexを使う)
-
-- 何もしないダミーmutexクラスをヘッダーファイル`stub_mutex.h`で定義することにより、pico SDK C++でビルドできるようにしています。
-- 通常であれば、`stub_mutex.h`をverilator出力のCPPソースの先頭に`#include "stub_mutex.h"`と書けばコンパイルできるようになります。
-- しかしながら、verilator変換は何度も実行するので、その度に毎回出力ソースファイルを修正するのは手間がかかります。
-- そこで、ヘッダーファイル`stub_mutex.h`を読み込むようにg++フラグオプションで指定します。
-
-  ```bash
-  g++ -include stub_mutex.h -o output source.cpp
-  ```
-
-- '-include` オプション
-  - 特定のヘッダーファイルを強制的にインクルードします。ソースコードに `#include` を書かなくても、指定したヘッダーファイルが自動的にインクルードされます。
-- 実際は`CMakeLists.txt`に書かれています。
-  - [CMakeLists.txt](./verilator-TD4/CMakeLists.txt)
-
-  ```text
-      # dir_obj/*.cppに -include stub_mutex.h を適用
-      set_source_files_properties(${VERILATOR_SOURCES} PROPERTIES COMPILE_FLAGS "-include stub_mutex.h")
-  ```
-
-- 結論
-  - verilatorの出力C++ソースを修正する必要はありません。
+  - [詳細はこちら：FAQ-Q1](./etc/92-FAQ.md#q1-verilator出力のcソースを修正する必要はあるか)
 
 ---
 
-## メモ
+## メモ、雑感
 
 [メモ](./etc/91-memo.md)
-
----
-
-## fork元からの引用
-
-### simpleTD4
-
-- [TD4_details_jp.md](https://github.com/asfdrwe/simpleTD4/blob/master/TD4_details_jp.md) にコードの解説があります。
 
 ---
 
