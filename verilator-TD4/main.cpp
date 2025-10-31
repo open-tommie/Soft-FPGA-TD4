@@ -22,6 +22,7 @@
 #include "verilated.h"
 
 #include "pico/stdlib.h"
+#include "hardware/flash.h"  // flash_get_size() 用
 
 #define DEBUG
 #include "debug.h"
@@ -80,6 +81,19 @@ void init_time_culc( void)
     m33_hw->dwt_ctrl |= 1u;        // CYCCNTENA有効化
 }   
 
+// JEDEC Read IDコマンド（0x9F）でフラッシュ容量を取得
+uint32_t get_flash_size_bytes( uint8_t* p_vendor_id, uint8_t* p_device_id) {
+    uint8_t txbuf[4] = {0x9F, 0, 0, 0};  // コマンド + ダミーバイト（合計4バイト）
+    uint8_t rxbuf[4] = {0};
+    flash_do_cmd(txbuf, rxbuf, 4);  // QSPI経由でコマンド実行
+
+    *p_vendor_id = rxbuf[1];  // ベンダーID
+    *p_device_id = rxbuf[2];  // デバイスID
+    // 応答の4バイト目（インデックス3）が容量指数（2^index バイト）
+    // 例: 0x15 = 21 → 2^21 = 2MB, 0x18 = 24 → 16MB
+    return 1UL << rxbuf[3];
+}
+
 // ロジックを実行評価
 // Cortex-M33のDWT_CYCCNTを使って時間計測
 void eval(VTD4* top) {
@@ -104,6 +118,7 @@ int main() {
     const uint LED_PIN = 25;  // Pico 2の組み込みLEDピン（PICO_DEFAULT_LED_PINでも可）
 
     stdio_init_all();
+
 
     // Cortex-M33のDWT_CYCCNTを使って時間計測の初期化
     init_time_culc();
@@ -142,6 +157,28 @@ int main() {
     char compile_date[20];
     convert_date( compile_date, __DATE__, __TIME__ );
     _DEBUG( "compile_date=%s\n", compile_date);
+
+
+    // ユニークID取得（8バイト配列、64ビット）
+    uint8_t unique_id[8];
+    flash_get_unique_id(unique_id);
+    // 出力（16進数で表示）
+    _DEBUG("Flash Unique ID: ");
+    for (int i = 0; i < 8; i++) {
+        printf("%02X", unique_id[i]);  // 各バイトを2桁16進で
+    }
+    printf("\n");
+
+    // フラッシュサイズ取得（バイト単位）
+    uint8_t vendor_id = 0;
+    uint8_t device_id = 0;
+    uint32_t flash_size_bytes = get_flash_size_bytes( &vendor_id, &device_id);
+    // 出力（ベンダーID、デバイスID）
+    _DEBUG("Flash vender_id: %02X\n", vendor_id);
+    _DEBUG("Flash device_id: %02X\n", device_id);
+    // 出力（バイトとKB）
+    _DEBUG("Flash size: %lu MB\n", 
+           (unsigned long)(flash_size_bytes / (1024*1024)));
     _DEBUG( "**************************\n" );
     
     // Verilated::commandArgs(0, (char**)nullptr); // 組み込み用: argc, argv不要

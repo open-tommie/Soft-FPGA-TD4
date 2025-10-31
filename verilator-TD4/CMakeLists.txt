@@ -65,7 +65,7 @@ if (TARGET tinyusb_device)
     set_source_files_properties(${VERILATOR_SOURCES} PROPERTIES COMPILE_FLAGS "-include stub_mutex.h")
 
     # pull in common dependencies
-    target_link_libraries(test pico_stdlib pico_aon_timer)
+    target_link_libraries(test pico_stdlib pico_aon_timer hardware_flash)
 
     # enable usb output, disable uart output
     pico_enable_stdio_usb(test 1)
