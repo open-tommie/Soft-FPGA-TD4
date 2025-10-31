@@ -128,7 +128,7 @@ int main() {
     for (int i = 0; i < 4; i++) {
         gpio_init( pins_dip[i]);
         gpio_set_dir(pins_dip[i], GPIO_IN);
-        gpio_pull_up(pins_dip[i]);  // 内部プルアップ有効 (OFF=1, ON=0)
+        gpio_pull_up(pins_dip[i]);  // 内部プルアップ有効
     }
 
 
