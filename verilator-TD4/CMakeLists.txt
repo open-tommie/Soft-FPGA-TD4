@@ -40,7 +40,7 @@ file(GLOB VERILATOR_SOURCES "obj_dir/*.cpp")
 pico_sdk_init()
 
 # Verilator include directory
-set(VERILATOR_INCUDE_DIR "C:/msys64/mingw64/share/verilator/include")
+set(VERILATOR_INCUDE_DIR "C:/msys64/ucrt64/share/verilator/include")
 
 # Add executable. Default name is the project name, version 0.1
 

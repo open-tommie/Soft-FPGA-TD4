@@ -1,3 +1,14 @@
+//
+// stub_mutex.h
+// シングルスレッド環境向けのmutexおよび関連スタブ実装
+// Verilatorのマルチスレッド機能を使用しない場合に利用
+// 
+// Last updated on: Oct-31-2025
+// by tommie.jp (GitHub: open-tommie)
+//
+// SPDX-License-Identifier: MIT
+// 
+
 #ifndef STUB_MUTEX_H
 #define STUB_MUTEX_H
 
