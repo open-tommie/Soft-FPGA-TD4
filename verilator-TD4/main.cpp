@@ -111,6 +111,7 @@ int main() {
     // GPIO初期化
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);  // 出力モード
+    gpio_put(LED_PIN, 1);  // LED ON (アクティブハイ)
 
     // LED設定
     // GPIOピンを出力モードに設定

@@ -28,9 +28,8 @@
   - Windows11
     - VSCode
       - `pico SDK` VSCode拡張
-    - WSL2
-      - Ubuntu24
-        - verilator 5
+    - MSYS2
+      - verilator 5
 
 ---
 
@@ -81,6 +80,26 @@
 
 (TBD)
 
+- `MSYS2`でシェルスクリプトを実行します。
+  - [do-varilator.sh](./verilator-TD4/do-verilator.sh)
+  - ./obj_dirにC++ソースを出力します。
+  - main.cppは出力しない
+- 実行例：
+
+```bash
+tommie@PC40-MSYS:/c/pico2/Soft-FPGA-TD4/verilator-TD4$ ./do-verilator.sh
+#!/bin/bash -v
+# Verilatorを使ってVerilogコードをC++に変換
+#
+# MSYS2環境で実行することを想定
+# 実行方法: ./do-verilator.sh
+
+verilator --no-timing --cc TD4.v --exe main.cpp --top-module TD4 --threads 1 --threads-dpi none -o VTD4_sim
+- V e r i l a t i o n   R e p o r t: Verilator 5.040 2025-08-30 rev UNKNOWN.REV
+- Verilator: Built from 0.000 MB sources in 0 modules, into 0.000 MB in 0 C++ files needing 0.000 MB
+- Verilator: Walltime 0.002 s (elab=0.000, cvt=0.000, bld=0.000); cpu 0.000 s on 1 threads; alloced 5.172 MB
+```
+
 ---
 
 ## Debug Probeで書き込み
@@ -95,6 +114,8 @@
 ## pico2接続
 
 （TBD)
+
+- [Raspberry Pi Pico2のピン配置](https://datasheets.raspberrypi.com/pico/Pico-2-Pinout.pdf)
 
 - ログ解説
 
