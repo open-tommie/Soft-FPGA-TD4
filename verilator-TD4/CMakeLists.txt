@@ -39,6 +39,9 @@ file(GLOB VERILATOR_SOURCES "obj_dir/*.cpp")
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+# Verilator include directory
+set(VERILATOR_INCUDE_DIR "C:/msys64/mingw64/share/verilator/include")
+
 # Add executable. Default name is the project name, version 0.1
 
 if (TARGET tinyusb_device)
@@ -47,16 +50,14 @@ if (TARGET tinyusb_device)
             debug.cpp
             ${VERILATOR_SOURCES}  # 全生成ファイル自動追加 (Vcounter.cpp, Vcounter__Syms.cpp, Vcounter___024root.cpp など)
 
-            verilib/verilated.cpp # include/verilated.cpp をコピーしたもの
-            )
+            verilib/verilated.cpp # ${VERILATOR_INCUDE_DIR}/verilated.cpp をコピーしてpico2用に修正したもの
+    )
     # C++11以上を有効 (mutexダミー用)
     set(CMAKE_CXX_STANDARD 11)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
     # Verilator生成ヘッダ用インクルードディレクトリ追加
-    target_include_directories(test PRIVATE . obj_dir
-        C:/msys64/mingw64/share/verilator/include
-    )
+    target_include_directories(test PRIVATE . obj_dir ${VERILATOR_INCUDE_DIR} )
     # # GCCの -include オプションで自動インクルード（すべてのソースに適用）
     # target_compile_options(test PRIVATE -include stub_mutex.h)
 

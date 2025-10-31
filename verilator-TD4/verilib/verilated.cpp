@@ -45,7 +45,6 @@
 //     and DPI libraries are not needed there.
 //=========================================================================
 
-
 #define VERILATOR_VERILATED_CPP_
 
 // by tommie.jp
@@ -1328,19 +1327,6 @@ IData _vl_vsscanf(FILE* fp,  // If a fscanf
                 _vl_vsss_advance(fp, floc);
                 break;
             }
-            case '0':  // FALLTHRU
-            case '1':  // FALLTHRU
-            case '2':  // FALLTHRU
-            case '3':  // FALLTHRU
-            case '4':  // FALLTHRU
-            case '5':  // FALLTHRU
-            case '6':  // FALLTHRU
-            case '7':  // FALLTHRU
-            case '8':  // FALLTHRU
-            case '9': {
-                inPct = true;
-                break;
-            }
             case '*':
                 inPct = true;
                 inIgnore = true;
@@ -1348,7 +1334,7 @@ IData _vl_vsscanf(FILE* fp,  // If a fscanf
             default: {
                 // Deal with all read-and-scan somethings
                 // Note LSBs are preserved if there's an overflow
-                int obits = inIgnore ? 0 : va_arg(ap, int);
+                const int obits = inIgnore ? 0 : va_arg(ap, int);
                 VlWide<VL_WQ_WORDS_E> qowp;
                 VL_SET_WQ(qowp, 0ULL);
                 WDataOutP owp = qowp;
@@ -1409,26 +1395,7 @@ IData _vl_vsscanf(FILE* fp,  // If a fscanf
                     VL_SET_WQ(owp, u.ld);
                     break;
                 }
-                case 't': {  // Time
-                    _vl_vsss_skipspace(fp, floc, fromp, fstr);
-                    _vl_vsss_read_str(fp, floc, fromp, fstr, t_tmp, "+-.0123456789eE");
-                    if (!t_tmp[0]) goto done;
-                    union {
-                        double r;
-                        int64_t ld;
-                    } u;
-                    // Get pointer argument first, as proceeds the timeunit value
-                    if (obits != 64) goto done;
-                    QData* const realp = va_arg(ap, QData*);
-                    const int timeunit = va_arg(ap, int);
-                    const int userUnits
-                        = Verilated::threadContextp()->impp()->timeFormatUnits();  // 0..-15
-                    const int shift = -userUnits + timeunit;  // 0..-15
-                    u.r = std::strtod(t_tmp, nullptr) * vl_time_multiplier(-shift);
-                    *realp = VL_CLEAN_QQ(obits, obits, u.ld);
-                    obits = 0;  // Already loaded the value, don't read arg
-                    break;
-                }
+                case 't':  // FALLTHRU  // Time
                 case '#': {  // Unsigned decimal
                     _vl_vsss_skipspace(fp, floc, fromp, fstr);
                     _vl_vsss_read_str(fp, floc, fromp, fstr, t_tmp, "0123456789+-xXzZ?_");
@@ -2855,28 +2822,22 @@ void VerilatedContext::addModel(const VerilatedModel* modelp) {
 
     // We look for time passing, as opposed to post-eval(), as embedded
     // models might get added inside initial blocks.
-    if (VL_UNLIKELY(time())) {
-        const std::string msg
-            = "Adding model '"s + modelp->hierName()
-              + "' when time is non-zero. ... Suggest check time(), or for restarting"
-                " model use a new VerilatedContext";
-        VL_FATAL_MT("", 0, "", msg.c_str());
-    }
+    if (VL_UNLIKELY(time()))
+        VL_FATAL_MT(
+            "", 0, "",
+            "Adding model when time is non-zero. ... Suggest check time(), or for restarting"
+            " model use a new VerilatedContext");
 
     threadPoolp();  // Ensure thread pool is created, so m_threads cannot change any more
     m_threadsInModels += modelp->threads();
-    
     // tommie.jp
     _DEBUG( "modelp->thread()=%d\n", modelp->threads() );
     _DEBUG( "m_threads=%d\n", m_threads );
-   // if (VL_UNLIKELY(modelp->threads() > m_threads)) {
-    //     std::ostringstream msg;
-    //     msg << "VerilatedContext has " << m_threads << " threads but model '"
-    //         << modelp->modelName() << "' (instantiated as '" << modelp->hierName()
-    //         << "') was Verilated with --threads " << modelp->threads() << ".\n";
-    //     const std::string str = msg.str();
-    //     VL_FATAL_MT(__FILE__, __LINE__, modelp->hierName(), str.c_str());
-    // }
+//    if (VL_UNLIKELY(modelp->threads() > m_threads)) {
+//            << "') was Verilated with --threads " << modelp->threads() << ".\n";
+//        const std::string str = msg.str();
+//        VL_FATAL_MT(__FILE__, __LINE__, modelp->hierName(), str.c_str());
+//    }
 }
 
 VerilatedVirtualBase* VerilatedContext::threadPoolp() {

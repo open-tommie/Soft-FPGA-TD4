@@ -3,8 +3,10 @@
 *.SWO
 *.a
 *.app
+*.bak
 *.bin
 *.d
+*.dat
 *.dll
 *.dwo
 *.dylib
